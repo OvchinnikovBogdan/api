@@ -34,4 +34,12 @@ export class UsersService {
       },
     });
   }
+
+  async findById(id: number): Promise<User> {
+    return (await this.databaseService.user.findFirst({
+      where: {
+        id: id,
+      },
+    })) as User;
+  }
 }

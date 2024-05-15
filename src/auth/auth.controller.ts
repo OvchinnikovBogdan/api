@@ -10,10 +10,14 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { UsersService } from 'src/users/users.service';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -40,8 +44,12 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('login')
-  getUserData(@Request() req) {
-    return { username: req.user.username };
+  @Get('user-data')
+  async getUserData(@Request() req) {
+    const data = await this.userService.findOne(req.user.username);
+    return {
+      login: data.login,
+      role: data.role,
+    };
   }
 }

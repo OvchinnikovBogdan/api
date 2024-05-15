@@ -2,7 +2,5 @@ export class User {
   id: number;
   login: string;
   password: string;
-  role: TypeRole;
+  role: 'admin' | 'user';
 }
-
-type TypeRole = 'Admin' | 'User';

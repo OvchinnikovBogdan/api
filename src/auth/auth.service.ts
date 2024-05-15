@@ -28,6 +28,7 @@ export class AuthService {
     await this.userService.add({
       login: username,
       password: pass,
+      role: 'user',
     } as User);
   }
 }
