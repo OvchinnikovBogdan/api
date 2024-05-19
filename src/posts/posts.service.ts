@@ -27,4 +27,10 @@ export class PostsService {
       data: post as PrismaPost,
     });
   }
+
+  async deletePost(id: number) {
+    await this.databaseService.post.delete({
+      where: { id: id },
+    });
+  }
 }

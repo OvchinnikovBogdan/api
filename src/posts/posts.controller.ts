@@ -6,6 +6,9 @@ import {
   UnauthorizedException,
   Post as PostDecorator,
   Body,
+  Delete,
+  ParseIntPipe,
+  Param,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -46,9 +49,8 @@ export class PostsController {
   @PostDecorator()
   @UseGuards(AuthGuard)
   async addPost(@Request() req, @Body() post: PostedPost) {
-    if ((await this.userService.findOne(req.user.username)).role !== 'user')
-      throw new UnauthorizedException();
     const user = await this.userService.findOne(req.user.username);
+    if (user.role !== 'user') throw new UnauthorizedException();
     const { name, description, type, location } = post;
     const postData: Post = {
       userId: user.id,
@@ -59,5 +61,13 @@ export class PostsController {
       location,
     } as Post;
     return await this.postsService.createPost(postData);
+  }
+
+  @Delete('/:id')
+  @UseGuards(AuthGuard)
+  async deletePost(@Request() req, @Param('id', ParseIntPipe) id: number) {
+    const user = await this.userService.findOne(req.user.username);
+    if (user.role !== 'admin') throw new UnauthorizedException();
+    return await this.postsService.deletePost(id);
   }
 }

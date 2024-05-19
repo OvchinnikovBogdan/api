@@ -48,6 +48,7 @@ export class AuthController {
   async getUserData(@Request() req) {
     const data = await this.userService.findOne(req.user.username);
     return {
+      id: data.id,
       login: data.login,
       role: data.role,
     };
