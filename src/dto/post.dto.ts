@@ -8,3 +8,13 @@ export class Post {
   status: 'open' | 'close' | 'inProcess';
   location: string;
 }
+
+export class PostToUpdate {
+  createdAt?: Date;
+  userId?: number;
+  name?: string;
+  description?: string;
+  type?: string;
+  status?: 'open' | 'close' | 'inProcess';
+  location?: string;
+}

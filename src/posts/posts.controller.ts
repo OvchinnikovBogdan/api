@@ -9,11 +9,12 @@ import {
   Delete,
   ParseIntPipe,
   Param,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UsersService } from 'src/users/users.service';
-import { Post } from 'src/dto/post.dto';
+import { Post, PostToUpdate } from 'src/dto/post.dto';
 
 class PostedPost {
   userId: number;
@@ -69,5 +70,17 @@ export class PostsController {
     const user = await this.userService.findOne(req.user.username);
     if (user.role !== 'admin') throw new UnauthorizedException();
     return await this.postsService.deletePost(id);
+  }
+
+  @Put('/:id')
+  @UseGuards(AuthGuard)
+  async update(
+    @Request() req,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() post: PostToUpdate,
+  ) {
+    const user = await this.userService.findOne(req.user.username);
+    if (user.role !== 'admin') throw new UnauthorizedException();
+    return await this.postsService.update(id, post);
   }
 }

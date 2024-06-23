@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { Post } from 'src/dto/post.dto';
+import { Post, PostToUpdate } from 'src/dto/post.dto';
 import { Post as PrismaPost } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostsService {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly databaseService: DatabaseService) {}
 
   async getPosts(): Promise<Post[]> {
     return (await this.databaseService.post.findMany()) as Post[];
@@ -31,6 +27,13 @@ export class PostsService {
   async deletePost(id: number) {
     await this.databaseService.post.delete({
       where: { id: id },
+    });
+  }
+
+  async update(id: number, post: PostToUpdate) {
+    return await this.databaseService.post.update({
+      where: { id },
+      data: post,
     });
   }
 }
