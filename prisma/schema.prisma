@@ -29,4 +29,5 @@ model Post {
   type String
   status String
   location String
+  masterName String?
 }
